@@ -17,12 +17,15 @@ exports.createProduct = catchAsyncError( async(req, res, next) => {
 
 //get all products
 exports.getAllProducts = catchAsyncError( async(req, res) => {
-    const apiFeatures = new ApiFeatures(products, req.query).search().filter(); 
+    const productCount = await products.countDocuments();
+    const apiFeatures = new ApiFeatures(products, req.query).search().filter().paginate(); 
+
     let allProducts = await apiFeatures.query;
     res.status(200).json({
         message: 'All products',
         success: true,
          allProducts,
+            productCount
         });
 });
 //update products admin
