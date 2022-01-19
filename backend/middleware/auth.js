@@ -11,3 +11,11 @@ exports.isAuthenticatedUser = catchAsyncError(
         next();
     }
 ) 
+
+exports.isAdmin = catchAsyncError(
+    async (req, res, next) => {
+        if (req.user.role !== "admin") return next(new errorHandler(403, `Forbidden access`));
+        next();
+    }
+)
+
