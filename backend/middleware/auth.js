@@ -1,16 +1,13 @@
 const catchAsyncError = require("./catchAsyncError");
+const errorHandler = require("../utils/errorHandler");
 
-const isAuthenticatedUser = catchAsyncError(
+exports.isAuthenticatedUser = catchAsyncError(
     async (req, res, next) => {
-        const token = req.cookie;
-        if (req.user.role !== "admin") {
-            return next(
-                new errorHandler(
-                    403,
-                    "You are not authorized to access this route"
-                )
-            );
-        }
+        const { token } = req.cookies;
+        if (!token) return next(new errorHandler(401, "Unauthorized"));
+        const { userId } = require('jsonwebtoken').verify(token, process.env.JWT_SECRET);
+        if (!userId) return next(new errorHandler(401, "Unauthorized"));
+        req.user = await User.findById(userId);
         next();
     }
 ) 

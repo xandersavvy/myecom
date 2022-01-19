@@ -2,7 +2,6 @@ const mongoose = require('mongoose');
 const validator = require('validator');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
-const catchAsyncError = require('../middleware/catchAsyncError');
 
 const userSchema = new mongoose.Schema({
     name: {
@@ -51,7 +50,7 @@ const userSchema = new mongoose.Schema({
 //Password Encryption
 userSchema.pre("save", async function (next) {
     if (!this.isModified("password")) return next();
-    this.password = await bcrypt.hash(this.password, 12);
+    this.password = await bcrypt.hash(this.password, 10);
     next();
 });
 
@@ -64,7 +63,8 @@ userSchema.methods.getSignedJwtToken = function () {
 
 
 //compare password
-userSchema.methods.correctPassword = catchAsyncError(async (candidatePassword, userPassword) => 
-await bcrypt.compare(candidatePassword, userPassword));
+userSchema.methods.correctPassword = async function(password) { 
+    return await bcrypt.compare(password, this.password);
+}
 
 module.exports = mongoose.model('User', userSchema);

@@ -2,17 +2,20 @@ const { getAllProducts , createProduct, updateProduct ,deleteProduct, getProduct
 
 const router = require('express').Router(); //create a router
 
-router.get('/', getAllProducts ); //get all products
+const { isAuthenticatedUser } = require('../middleware/auth');
+
+router.get( '/',isAuthenticatedUser,getAllProducts)
 
 
 
 
 router.post('/products/new', createProduct ); //create new product
 
-router.get('/products/:id', getProductById ); //get product by id   //get product by id
+router.route('/products/:id')
+        .get(getProductById)
+        .put(updateProduct )
+        .delete(deleteProduct )
 
-router.put('/products/:id', updateProduct )//update a product
-
-router.delete('/products/:id', deleteProduct )//delete a product
+        //crud on products
 
 module.exports = router; //export the router
