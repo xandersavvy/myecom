@@ -8,6 +8,13 @@ module.exports = app; //export the app
 const port = process.env.PORT || 3000; //set the port
 const error = require('./middleware/error'); //import the error middleware
 
+//handle uncaught exceptions
+process.on('uncaughtException', (err) => {
+    console.log('uncaughtException', err.message, err.stack);
+    process.exit(1);
+});
+
+
 
 
 //function to call
@@ -19,9 +26,7 @@ app.use("/", require('./routes/productRoute')); //use the product route
 app.use(error); //use the error middleware
 
 
-app.listen(port, () => { //listen to the port
-    console.log(`Server started on port ${port}`);
-});
+
 
 app.get('/', (req, res) => { //get the root
     res.send(`Hello World!`);
@@ -30,3 +35,20 @@ app.get('/', (req, res) => { //get the root
 app.post('/', (req, res) => { //post the root
     res.send('Hello World');
 });
+
+
+
+//server code 
+const server = app.listen(port, () => { //listen to the port
+    console.log(`Server started on port ${port}`);
+});
+
+//unhandled promise rejection
+process.on('unhandledRejection', (err, promise) => { //if there is an unhandled promise rejection
+    console.log(`Error: ${err.message}`); //log the error
+    //close the server
+    server.close(() => {
+        process.exit(1); //exit the process
+    }
+    );
+}); //end of unhandled promise rejection
