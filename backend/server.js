@@ -22,6 +22,8 @@ connectDatabase(); //connect to the database
 
 app.use(require('express').json()); //use json
 app.use("/", require('./routes/productRoute')); //use the product route
+app.use("/", require('./routes/userRoute')); //use the user route
+
 
 app.use(error); //use the error middleware
 
