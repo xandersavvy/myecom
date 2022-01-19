@@ -1,14 +1,15 @@
 require('dotenv').config({ path: './.env' }); //give environement variables to the server
 
 const app = require('express')();  //create an express app
-const connectDatabase = require('./db/database'); //connect to the database
+require('./db/database')(); //connect to the database
 
-
-module.exports = app; //export the app
 const port = process.env.PORT || 3000; //set the port
-const error = require('./middleware/error'); //import the error middleware
+
+
 
 //handle uncaught exceptions
+
+
 process.on('uncaughtException', (err) => {
     console.log('uncaughtException', err.message, err.stack);
     process.exit(1);
@@ -18,25 +19,16 @@ process.on('uncaughtException', (err) => {
 
 
 //function to call
-connectDatabase(); //connect to the database
 
 app.use(require('express').json()); //use json
+app.use(require('cookie-parser')()); //use cookie parser
 app.use("/", require('./routes/productRoute')); //use the product route
 app.use("/", require('./routes/userRoute')); //use the user route
 
 
-app.use(error); //use the error middleware
+app.use(require('./middleware/error')); //use the error middleware
 
 
-
-
-app.get('/', (req, res) => { //get the root
-    res.send(`Hello World!`);
-});
-
-app.post('/', (req, res) => { //post the root
-    res.send('Hello World');
-});
 
 
 
@@ -54,3 +46,8 @@ process.on('unhandledRejection', (err, promise) => { //if there is an unhandled 
     }
     );
 }); //end of unhandled promise rejection
+
+
+
+
+module.exports = app; //export the app

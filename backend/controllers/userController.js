@@ -1,5 +1,6 @@
 const errorHandler = require('../utils/errorHandler');
 const catchAsyncError = require('../middleware/catchAsyncError');
+const sendToken = require('../utils/sendToken');
 const User = require('../models/userModels');
 
 
@@ -9,11 +10,8 @@ exports.registerUser = catchAsyncError(async (req, res, next) => {
         name,  email, password, role
     });
 
-    const token = newUser.getSignedJwtToken();
-    res.status(201).json({
-        status: 'success',
-        token,
-    });
+    sendToken(newUser, 201, res);
+
 })
 
 
@@ -29,11 +27,7 @@ exports.loginUser = catchAsyncError(async (req, res, next) => {
     if(!user || !(await user.correctPassword(password, user.password))) return next(
         new errorHandler(401, 'Incorrect email or password'));
     // 3) If everything ok, send token to client
-    const token = user.getSignedJwtToken();
-    res.status(200).json({
-        status: 'success',
-        token,
-    });
+    sendToken(user, 200, res);
 })
 
 

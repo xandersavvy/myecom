@@ -2,7 +2,7 @@ const { getAllProducts , createProduct, updateProduct ,deleteProduct, getProduct
 
 const router = require('express').Router(); //create a router
 
-router.get('/products', getAllProducts ); //get all products
+router.get('/', getAllProducts ); //get all products
 
 
 
