@@ -42,6 +42,54 @@ exports.logoutUser = catchAsyncError(async (req, res, next) => {
     })
 })
 
+exports.forgotPassword = catchAsyncError(async (req, res, next) => {
+    // 1) Get user based on POSTed email
+    const user = await User.findOne({ email: req.body.email });
+    if (!user) return next(new errorHandler(404, 'There is no user with this email address'));
+    const resetToken = user.getResetPasswordToken(); // get token
+    await user.save({ validateBeforeSave: false }); // save token to DB
+    // set the link to reset password (forgot-password)
+    const resetURL = `${req.protocol}://${req.get('host')}/api/v1/users/resetPassword/${resetToken}`;
+
+    const message = `You are receiving this email because you (or someone else) has requested the reset of a password. Please make a PUT request to: \n\n ${resetURL}`;
+
+    try {
+
+        await sendEmail({
+            email: user.email;
+            subject: 'Password reset token',
+            message: message
+            
+        })
+
+        res.status(200).json({
+            status: 'success',
+            message: 'Token sent to email - ' + user.email
+        })
+
+
+    } catch (err) {
+        user.resetPasswordToken = undefined;
+        user.resetPasswordExpire = undefined;
+        user.save({ validateBeforeSave: false });
+        return next(new errorHandler(500, 'Internal Server Error'));
+    }
+});
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 exports.getAllUsers = catchAsyncError(async (req, res, next) => {
     const users = await User.find();
