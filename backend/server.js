@@ -24,7 +24,7 @@ app.use(require('express').json()); //use json
 app.use(require('cookie-parser')()); //use cookie parser
 app.use("/", require('./routes/productRoute')); //use the product route
 app.use("/", require('./routes/userRoute')); //use the user route
-
+app.use("/", require('./routes/orderRoute')); //use the order route
 
 app.use(require('./middleware/error')); //use the error middleware
 

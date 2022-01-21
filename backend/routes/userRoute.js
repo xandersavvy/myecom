@@ -2,7 +2,7 @@ const router = require('express').Router();
 
 const {registerUser , updateUserDetails  ,getAllUsers, loginUser, 
     logoutUser, forgotPassword, resetPassword, getUserDetails , deleteUser,
-    getSingleUser , } = require('../controllers/userController');
+    getSingleUser ,updatePassword } = require('../controllers/userController');
 const { isAdmin, isAuthenticatedUser } = require('../middleware/auth');
 
 router.post('/register', registerUser);
@@ -14,7 +14,7 @@ router.post('/logout', isAuthenticatedUser, logoutUser);
 
 router.post('/forgot-password', forgotPassword);
 
-router.put('/reset-password/:resetToken', resetPassword);
+router.put('/reset-password/:token', resetPassword);
 
 router.put('/update-password', isAuthenticatedUser,  updatePassword);
 
