@@ -79,8 +79,11 @@ exports.updateProduct = catchAsyncError( async(req, res) => {
         req.body.images = imagesLinks;
     }
     
-    product = await products.findByIdAndUpdate(req.params.id, req.body, {new: true});
+    product = await products.findByIdAndUpdate(req.params.id, req.body, 
+        {new: true, runValidators: true , useFindAndModify: false});
 
+
+    if (!product) return next(new ErrorHandler(500, 'Product cannot be updated'));
     res.status(200).json({
             message: 'Product updated successfully',
             product: product });
@@ -89,8 +92,15 @@ exports.updateProduct = catchAsyncError( async(req, res) => {
 //delete product admin
 
 exports.deleteProduct = catchAsyncError( async(req, res) => {
-    const product = await products.findByIdAndDelete(req.params.id);
+    const product = await products.findById(req.params.id);
     if (!product) return next(new ErrorHandler(500, 'Product not found'));
+
+    product.images.map(async (image) => {
+        await cloudinary.v2.uploader.destroy(image.public_id);
+    });
+
+    await product.remove();
+
     res.status(200).json({
         message: 'Product deleted successfully',
         product: product
@@ -107,3 +117,79 @@ exports.getProductById = catchAsyncError( async(req, res) => {
         product: product
     })
 })
+
+
+
+// products reviews
+
+//create or update products reviews 
+// didn't test good luck
+exports.createOrUpdateProductReview = catchAsyncError( async(req, res) => {
+    const {comment , productId} = req.body;
+
+    const review = {
+        user : req.user._id,
+        name: req.user.name,
+        comment : comment,
+    }
+
+    const product = await products.findById(productId);
+
+    if (!product) return next(new ErrorHandler(500, 'Product not found'));
+
+    const isReviewed = product.reviews.find(review => review.user.toString() === req.user._id.toString());
+
+    let updatedProduct ;
+    if(isReviewed){
+         updatedProduct = await products.findByIdAndUpdate(productId, {$pull: {reviews: {user: req.user._id}}}, {new: true});
+    }
+         updatedProduct = await products.findByIdAndUpdate(productId, {$push: {reviews: review}}, {new: true});
+        await updatedProduct.save();
+        res.status(200).json({
+            message: 'Product review created successfully',
+            product: updatedProduct
+        })
+    }
+
+    await product.save();
+    res.status(200).json({
+        message: 'Product review created successfully',
+        product: product
+    })  ;
+})
+
+
+//get all products reviews
+exports.getAllProductReviews = catchAsyncError( async(req, res) => {
+    const product = await products.findById(req.params.id);
+    if (!product) return next(new ErrorHandler(500, 'Product not found'));
+    res.status(200).json({
+        message: 'Product reviews found',
+        product: product
+    })
+}
+
+
+//Delete product review
+
+export.deleteProductReview = catchAsyncError( async(req, res) => {
+    const product = await products.findById(req.params.id);
+    if (!product) return next(new ErrorHandler(500, 'Product not found'));
+    const updatedProduct = await products.findByIdAndUpdate(productId, {$pull: {reviews: {user: req.user._id}}}, {new: true});
+    await updatedProduct.save();
+    res.status(200).json({
+        message: 'Product review deleted successfully',
+        product: updatedProduct
+    })
+}
+
+
+//get product reviews by id
+exports.getProductReviewsById = catchAsyncError( async(req, res) => {
+    const product = await products.findById(req.params.id);
+    if (!product) return next(new ErrorHandler(500, 'Product not found'));
+    res.status(200).json({
+        message: 'Product reviews found',
+        product: product
+    })
+}
