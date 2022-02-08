@@ -61,4 +61,4 @@ This is my personal project to use with various frontend frameworks for testing.
   ```
   is same as ``require('express')()``
 * The code might break .
-* And lastly I am available for hiring .
+* And I am available for being  hired.
