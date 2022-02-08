@@ -166,12 +166,12 @@ exports.getAllProductReviews = catchAsyncError( async(req, res) => {
         message: 'Product reviews found',
         product: product
     })
-}
+})
 
 
 //Delete product review
 
-export.deleteProductReview = catchAsyncError( async(req, res) => {
+exports.deleteProductReview = catchAsyncError( async(req, res) => {
     const product = await products.findById(req.params.id);
     if (!product) return next(new ErrorHandler(500, 'Product not found'));
     const updatedProduct = await products.findByIdAndUpdate(productId, {$pull: {reviews: {user: req.user._id}}}, {new: true});
@@ -180,7 +180,7 @@ export.deleteProductReview = catchAsyncError( async(req, res) => {
         message: 'Product review deleted successfully',
         product: updatedProduct
     })
-}
+})
 
 
 //get product reviews by id
@@ -191,4 +191,4 @@ exports.getProductReviewsById = catchAsyncError( async(req, res) => {
         message: 'Product reviews found',
         product: product
     })
-}
+})
