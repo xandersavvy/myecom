@@ -149,14 +149,13 @@ exports.createOrUpdateProductReview = catchAsyncError( async(req, res) => {
             message: 'Product review created successfully',
             product: updatedProduct
         })
-    }
 
-    await product.save();
+    await product.save()
     res.status(200).json({
         message: 'Product review created successfully',
         product: product
     })  ;
-})
+});
 
 
 //get all products reviews
