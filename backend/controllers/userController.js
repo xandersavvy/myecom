@@ -130,12 +130,12 @@ exports.updatePassword = catchAsyncError(async (req, res, next) => {
 //update user details
 exports.updateUserDetails = catchAsyncError(async (req, res, next) => {
     
-    
-    
     const user = await User.findByIdAndUpdate(req.user.id, req.body, {
         new: true,
         runValidators: true
     });
+
+    if(!user) return next(new errorHandler(404, 'User not found'));
 
     res.status(200).json({
         status: 'success',
@@ -193,3 +193,15 @@ exports.deleteUser = catchAsyncError(async (req, res, next) => {
     })
 })
 
+//update user role --admin
+exports.updateUserRole = catchAsyncError(async (req, res, next) => {
+    const user = await User.findByIdAndUpdate(req.params.id, { role: req.body.role }, {
+        new: true,
+        runValidators: true
+    });
+    if(!user) return next(new errorHandler(404, 'User not found'));
+    res.status(200).json({
+        status: 'success',
+        user
+    });
+}); 

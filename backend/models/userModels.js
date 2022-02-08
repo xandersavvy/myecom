@@ -26,18 +26,6 @@ const userSchema = new mongoose.Schema({
         maxLength: [30, "Password cannot exceed 30 characters"],
         select: false,
       },
-      avatar: {
-        public_id: {
-          type: String,
-          default: "",
-        //   required: true,
-        },
-        url: {
-          type: String,
-          default: "",
-            // required: true,
-        },
-      },
       role: {
         type: String,
         enum: ["user", "admin"],
