@@ -6,7 +6,7 @@ const {isAdmin , isAuthenticatedUser} = require('../middleware/auth');
 
 router.post('/orders/create', isAuthenticatedUser , catchAsyncError(createOrder));
 
-router.get('/orders', isAuthenticatedUser , catchAsyncError(getUserOrders));
+router.get('/orders', isAuthenticatedUser , !isAdmin ,catchAsyncError(getUserOrders));
 
 router.get('orders/all', isAuthenticatedUser, isAdmin , catchAsyncError(getAllOrders));
 
