@@ -7,6 +7,17 @@ const port = process.env.PORT || 3000; //set the port
 
 
 
+
+// cloudinary configuration
+
+require('cloudinary').config({
+    cloud_name: process.env.CLOUDINARY_NAME,
+    api_key: process.env.CLOUDINARY_API_KEY,
+    api_secret: process.env.CLOUDINARY_API_SECRET,
+});
+
+
+
 //handle uncaught exceptions
 
 
@@ -22,6 +33,8 @@ process.on('uncaughtException', (err) => {
 
 app.use(require('express').json()); //use json
 app.use(require('cookie-parser')()); //use cookie parser
+app.use(require('cors')()); //use cors
+app.use(require('body-parser').urlencoded({ extended: true })); //use body parser
 app.use("/", require('./routes/productRoute')); //use the product route
 app.use("/", require('./routes/userRoute')); //use the user route
 app.use("/", require('./routes/orderRoute')); //use the order route

@@ -2,7 +2,7 @@ const router = require('express').Router();
 
 const {registerUser , updateUserDetails  ,getAllUsers, loginUser, 
     logoutUser, forgotPassword, resetPassword, getUserDetails , deleteUser,
-    getSingleUser ,updatePassword } = require('../controllers/userController');
+    getSingleUser ,updatePassword , updateUserRole } = require('../controllers/userController');
 const { isAdmin, isAuthenticatedUser } = require('../middleware/auth');
 
 router.post('/register', registerUser);
@@ -20,14 +20,15 @@ router.put('/update-password', isAuthenticatedUser,  updatePassword);
 
 router.get('/user/me', isAuthenticatedUser , getUserDetails );
 
-router.put('/user/update', isAuthenticatedUser, updateUserDetails);
-
 
 router.get('/users/all',isAuthenticatedUser, isAdmin, getAllUsers);
 
 router.route('/user/:id').delete(isAuthenticatedUser, isAdmin, deleteUser)
                             .get(isAuthenticatedUser, isAdmin, getSingleUser)
-                            .put(isAuthenticatedUser, isAdmin, updateUserDetails);
+                            .put(isAuthenticatedUser,  updateUserDetails);
 
+
+
+router.put('user/:id/role', isAuthenticatedUser, isAdmin, updateUserRole);
 
 module.exports = router;

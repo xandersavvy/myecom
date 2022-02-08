@@ -158,17 +158,6 @@ exports.createOrUpdateProductReview = catchAsyncError( async(req, res) => {
 });
 
 
-//get all products reviews
-exports.getAllProductReviews = catchAsyncError( async(req, res) => {
-    const product = await products.findById(req.params.id);
-    if (!product) return next(new ErrorHandler(500, 'Product not found'));
-    res.status(200).json({
-        message: 'Product reviews found',
-        product: product
-    })
-})
-
-
 //Delete product review
 
 exports.deleteProductReview = catchAsyncError( async(req, res) => {

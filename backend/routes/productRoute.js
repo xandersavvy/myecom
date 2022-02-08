@@ -1,4 +1,6 @@
-const { getAllProducts , createProduct, updateProduct ,deleteProduct, getProductById } = require('../controllers/productController');
+const { getAllProducts , createProduct, updateProduct ,deleteProduct, getProductById,
+        createOrUpdateProductReview, deleteProductReview ,
+        getProductReviewsById} = require('../controllers/productController');
 
 const router = require('express').Router(); //create a router
 
@@ -17,5 +19,16 @@ router.route('/products/:id')
         .delete(isAuthenticatedUser,isAdmin, deleteProduct )
 
         //crud on products
+
+
+//reviews
+
+//edit reviews
+router.route("/products/:id/reviews")
+        .put(isAuthenticatedUser,createOrUpdateProductReview)
+        .post(isAuthenticatedUser,createOrUpdateProductReview)
+        .get(getProductReviewsById)
+        .delete(isAuthenticatedUser,deleteProductReview)
+
 
 module.exports = router; //export the router

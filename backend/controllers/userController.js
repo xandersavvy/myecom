@@ -156,7 +156,7 @@ exports.getAllUsers = catchAsyncError(async (req, res, next) => {
     });
 });
 
-//get single user admin
+//get single user 
 exports.getSingleUser = catchAsyncError(async (req, res, next) => {
     const user = await User.findById(req.params.id);
     if(!user) return next(new errorHandler(404, 'User not found'));
