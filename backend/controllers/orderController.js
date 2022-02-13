@@ -42,6 +42,7 @@ exports.getSingleOrder = async(req, res, next) => {
 //get user orders
 
 exports.getUserOrders = async(req, res, next) => {
+    if(req.user.role === "admin") return next(new ErrorHandler(403, 'Bro You are Admin'));
     const features = new ApiFeatures(orders.find({ user: req.user._id }), req.query).filter().search().paginate();
     const orders = await features.query;
     if (!orders) return next(new ErrorHandler(500, 'Orders not found'));

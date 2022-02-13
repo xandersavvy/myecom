@@ -12,18 +12,18 @@ router.post('/login', loginUser);
 router.post('/logout', isAuthenticatedUser, logoutUser);
 
 
-router.post('/forgot-password', forgotPassword);
+router.post('/password/forget', forgotPassword);
 
-router.put('/reset-password/:token', resetPassword);
+router.put('/password/reset/:token', resetPassword);
 
-router.put('/update-password', isAuthenticatedUser,  updatePassword);
+router.put('/password', isAuthenticatedUser,  updatePassword);
 
-router.get('/user/me', isAuthenticatedUser , getUserDetails );
+router.get('/me', isAuthenticatedUser , getUserDetails );
 
 
-router.get('/users/all',isAuthenticatedUser, isAdmin, getAllUsers);
+router.get('/all',isAuthenticatedUser, isAdmin, getAllUsers);
 
-router.route('/user/:id').delete(isAuthenticatedUser, isAdmin, deleteUser)
+router.route('/:id').delete(isAuthenticatedUser, isAdmin, deleteUser)
                             .get(isAuthenticatedUser, isAdmin, getSingleUser)
                             .put(isAuthenticatedUser,  updateUserDetails);
 
