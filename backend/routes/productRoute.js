@@ -6,12 +6,12 @@ const router = require('express').Router(); //create a router
 
 const { isAuthenticatedUser, isAdmin } = require('../middleware/auth');
 
-router.get( '/',isAuthenticatedUser,getAllProducts)
+router.route( '/').get(isAuthenticatedUser,getAllProducts)
 
 
 
 
-router.post('/products/new',isAdmin, createProduct ); //create new product
+router.route('/products/new').post(isAdmin, createProduct ); //create new product
 
 router.route('/products/:id')
         .get(getProductById)

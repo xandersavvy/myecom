@@ -5,30 +5,30 @@ const {registerUser , updateUserDetails  ,getAllUsers, loginUser,
     getSingleUser ,updatePassword , updateUserRole } = require('../controllers/userController');
 const { isAdmin, isAuthenticatedUser } = require('../middleware/auth');
 
-router.post('/register', registerUser);
+router.route('/register').post( registerUser);
 
-router.post('/login', loginUser);
+router.route('/login').post( loginUser);
 
-router.post('/logout', isAuthenticatedUser, logoutUser);
-
-
-router.post('/password/forget', forgotPassword);
-
-router.put('/password/reset/:token', resetPassword);
-
-router.put('/password', isAuthenticatedUser,  updatePassword);
-
-router.get('/me', isAuthenticatedUser , getUserDetails );
+router.route('/logout').post(isAuthenticatedUser, logoutUser);
 
 
-router.get('/all',isAuthenticatedUser, isAdmin, getAllUsers);
+router.route('/forgot-password').post( forgotPassword);
 
-router.route('/:id').delete(isAuthenticatedUser, isAdmin, deleteUser)
+router.route('/reset-password/:token').put( resetPassword);
+
+router.route('/update-password').put( isAuthenticatedUser,  updatePassword);
+
+router.route('/user/me').get(isAuthenticatedUser , getUserDetails );
+
+
+router.route('/users/all').get(isAuthenticatedUser, isAdmin, getAllUsers);
+
+router.route('/user/:id').delete(isAuthenticatedUser, isAdmin, deleteUser)
                             .get(isAuthenticatedUser, isAdmin, getSingleUser)
                             .put(isAuthenticatedUser,  updateUserDetails);
 
 
 
-router.put('user/:id/role', isAuthenticatedUser, isAdmin, updateUserRole);
+router.route('user/:id/role').put( isAuthenticatedUser, isAdmin, updateUserRole);
 
 module.exports = router;
